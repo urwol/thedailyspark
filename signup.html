@@ -1,1 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - My Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #4a90e2;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        nav {
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: #575757;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            background-color: #4a90e2;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #357abd;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Website</h1>
+        <p>Create your account to get started</p>
+    </header>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="blog.html">Blog</a>
+        <a href="donate.html">Donate</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </nav>
+
+    <div class="container">
+        <h2>Sign Up</h2>
+        <form id="signupForm">
+            <label for="fullname">Full Name:</label>
+            <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Choose a username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Choose a password" required>
+
+            <input type="submit" value="Sign Up">
+        </form>
+
+        <p class="footer-text">Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 My Website | All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // Optional: simulate signup and redirect to login page
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // prevent actual form submission
+            alert("Sign up successful! You will be redirected to login page.");
+            window.location.href = "login.html";
+        });
+    </script>
+</body>
+</html>
 
