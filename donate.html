@@ -3,75 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donate - My Website</title>
+    <title>Donate - Honeypot</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-
-        header {
-            background-color: #4a90e2;
-            color: white;
-            text-align: center;
-            padding: 15px 0;
-        }
-
-        nav {
-            background-color: #333;
-            overflow: hidden;
-        }
-
-        nav a {
-            float: left;
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-        }
-
-        nav a:hover {
-            background-color: #575757;
-        }
-
-        .container {
-            max-width: 700px;
-            margin: 40px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        h2 {
-            margin-bottom: 20px;
-            color: #222;
-        }
-
-        .wallet-address {
-            font-family: 'Courier New', monospace;
-            font-size: 1.2em;
-            background-color: #f0f0f0;
-            padding: 15px;
-            border-radius: 5px;
-            word-break: break-all;
-            user-select: all; /* easy to copy */
-            display: inline-block;
-            margin-top: 20px;
-        }
-
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            margin-top: 40px;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0; color: #333; }
+        header { background-color: #4a90e2; color: white; text-align: center; padding: 15px 0; }
+        nav { background-color: #333; overflow: hidden; }
+        nav a { float: left; display: block; color: white; text-align: center; padding: 14px 20px; text-decoration: none; }
+        nav a:hover { background-color: #575757; }
+        .container { max-width: 700px; margin: 40px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; }
+        h2 { margin-bottom: 20px; color: #222; }
+        .wallet-address { font-family: 'Courier New', monospace; font-size: 1.2em; background-color: #f0f0f0; padding: 15px; border-radius: 5px; word-break: break-all; user-select: all; display: inline-block; margin-top: 20px; cursor: text; }
+        footer { background-color: #333; color: white; text-align: center; padding: 15px; margin-top: 40px; }
     </style>
 </head>
 <body>
@@ -90,12 +32,47 @@
     <div class="container">
         <h2>Make a Donation</h2>
         <p>Your support helps us continue our work and reach more people. Any amount is appreciated!</p>
-        <div class="wallet-address">Uty538459xjjfwoieru8w3w454wewntnutyrk6r</div>
-        <p style="margin-top: 20px;">You can also contact us for bank transfer or other donation methods.</p>
+        <div class="wallet-address" id="wallet">Uty538459xjjfwoieru8w3w454wewntnutyrk6r</div>
+
+        <p style="margin-top: 20px;">Try to interact with the wallet to test!</p>
     </div>
 
     <footer>
         <p>&copy; 2025 My Website | All Rights Reserved</p>
     </footer>
+
+    <script>
+        // Safe honeypot logging
+        const honeypotLog = [];
+
+        const wallet = document.getElementById('wallet');
+
+        // Log clicks on the wallet
+        wallet.addEventListener('click', () => {
+            const time = new Date().toISOString();
+            honeypotLog.push({ type: 'wallet_click', time });
+            console.log(`[HONEYPOT] Wallet clicked at ${time}`);
+        });
+
+        // Log keyboard input if someone tries to modify the wallet
+        wallet.addEventListener('keydown', (e) => {
+            const time = new Date().toISOString();
+            honeypotLog.push({ type: 'wallet_keypress', key: e.key, time });
+            console.log(`[HONEYPOT] Key pressed on wallet: ${e.key} at ${time}`);
+            e.preventDefault(); // prevent changing the wallet
+        });
+
+        // Optional: log general clicks anywhere
+        document.addEventListener('click', (e) => {
+            const time = new Date().toISOString();
+            honeypotLog.push({ type: 'click', element: e.target.tagName, time });
+            console.log(`[HONEYPOT] Click on ${e.target.tagName} at ${time}`);
+        });
+
+        // Show final log on page unload (for testing)
+        window.addEventListener('beforeunload', () => {
+            console.log('Final Honeypot Session Log:', honeypotLog);
+        });
+    </script>
 </body>
 </html>
