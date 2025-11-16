@@ -10,41 +10,19 @@
             background-color: #f9f9f9;
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             color: #333;
         }
 
-        header {
-            background-color: #4a90e2;
-            color: white;
-            text-align: center;
-            padding: 15px 0;
-        }
-
-        nav {
-            background-color: #333;
-            overflow: hidden;
-        }
-
-        nav a {
-            float: left;
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-        }
-
-        nav a:hover {
-            background-color: #575757;
-        }
-
-        .container {
-            max-width: 700px;
-            margin: 40px auto;
+        .donation-container {
             background: white;
-            padding: 30px;
+            padding: 40px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            text-align: center;
         }
 
         h2 {
@@ -52,87 +30,23 @@
             color: #222;
         }
 
-        p {
-            line-height: 1.6;
-        }
-
-        .donate-button {
-            background-color: #4a90e2;
-            color: white;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.1em;
-        }
-
-        .donate-button:hover {
-            background-color: #357abd;
-        }
-
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
+        .bitcoin-address {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            background-color: #f0f0f0;
             padding: 15px;
-            margin-top: 40px;
-        }
-
-        form {
-            margin-top: 20px;
-        }
-
-        input[type="text"], input[type="number"], select {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
             border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 1em;
-        }
-
-        input[type="submit"] {
-            background-color: #4a90e2;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.1em;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #357abd;
+            word-break: break-all;
+            user-select: all; /* Makes it easy to copy */
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>My Website</h1>
-        <p>Support our mission by donating</p>
-    </header>
-
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="blog.html">Blog</a>
-        <a href="donate.html">Donate</a>
-        <a href="contact.html">Contact</a>
-    </nav>
-
-    <div class="container">
-        <h2>Make a Donation</h2>
-        <p>Your support helps us continue our work and reach more people. Any amount is appreciated!</p>
-        <p>This is my wallet address: Uty538459xjjfwoieru8w3w454wewntnutyrk6r</p>
-    
-
-        <p style="margin-top: 20px;">
-            You can also contact us for bank transfer or other donation methods.
-        </p>
+    <div class="donation-container">
+        <h2>Donate via Bitcoin</h2>
+        <div class="bitcoin-address">
+            Uty538459xjjfwoieru8w3w454wewntnutyrk6r
+        </div>
     </div>
-
-    <footer>
-        <p>&copy; 2025 My Website | All Rights Reserved</p>
-    </footer>
 </body>
 </html>
-
-
