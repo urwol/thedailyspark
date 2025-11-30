@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donate - Honeypot</title>
-
     <style>
         body { font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0; color: #333; }
         header { background-color: #4a90e2; color: white; text-align: center; padding: 15px 0; }
@@ -13,19 +12,21 @@
         nav a:hover { background-color: #575757; }
         .container { max-width: 700px; margin: 40px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; }
         h2 { margin-bottom: 20px; color: #222; }
-        .wallet-address { font-family: 'Courier New', monospace; font-size: 1.2em; background-color: #f0f0f0; padding: 15px; border-radius: 5px; word-break: break-all; user-select: all; display: inline-block; margin-top: 20px; cursor: text; }
-        footer { background-color: #333; color: white; text-align: center; padding: 15px; margin-top: 40px; }
-
-        #xssResult {
-            margin-top: 20px;
+        .wallet-address { 
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            background-color: #f0f0f0;
             padding: 15px;
-            background: #ffeeee;
-            border: 1px solid #ddcccc;
+            border-radius: 5px;
             word-break: break-all;
+            user-select: all;
+            display: inline-block;
+            margin-top: 20px;
+            cursor: text;
         }
+        footer { background-color: #333; color: white; text-align: center; padding: 15px; margin-top: 40px; }
     </style>
 </head>
-
 <body>
     <header>
         <h1>My Website</h1>
@@ -43,13 +44,10 @@
         <h2>Make a Donation</h2>
         <p>Your support helps us continue our work and reach more people. Any amount is appreciated!</p>
 
-        <div class="wallet-address" id="wallet">
-            Uty538459xjjfwoieru8w3w454wewntnutyrk6r
-        </div>
+        <!-- This wallet address can be overwritten by attacker scripts -->
+        <div class="wallet-address" id="wallet">Uty538459xjjfwoieru8w3w454wewntnutyrk6r</div>
 
-        <div id="xssResult"></div>
-
-        <p style="margin-top: 20px;">Try adding <code>?xss=&lt;script&gt;alert(1)&lt;/script&gt;</code> to the URL.</p>
+        <p style="margin-top: 20px;">Thank you for your support!</p>
     </div>
 
     <footer>
@@ -57,95 +55,33 @@
     </footer>
 
     <script>
-        /* ======================================================
-           NORMAL HONEYPOT LOGGING
-           ====================================================== */
-        const honeypotLog = [];
-        const wallet = document.getElementById('wallet');
-
-        wallet.addEventListener('click', () => {
-            const time = new Date().toISOString();
-            honeypotLog.push({ type: 'wallet_click', time });
-            console.log(`[HONEYPOT] Wallet clicked at ${time}`);
-        });
-
-        wallet.addEventListener('keydown', (e) => {
-            const time = new Date().toISOString();
-            honeypotLog.push({ type: 'wallet_keypress', key: e.key, time });
-            e.preventDefault();
-        });
-
-        document.addEventListener('click', (e) => {
-            const time = new Date().toISOString();
-            honeypotLog.push({ type: 'click', element: e.target.tagName, time });
-        });
-
-        window.addEventListener('beforeunload', () => {
-            console.log('Final Honeypot Session Log:', honeypotLog);
-        });
-
-        /* ======================================================
-           SIMULATED XSS VULNERABILITY (SAFE)
-          ====================================================== */
-
-        const params = new URLSearchParams(location.search);
-        const payload = params.get("xss");
-
-        if (payload) {
-
-            // Display escaped payload
-            document.getElementById("xssResult").innerHTML =
-                "<strong>Detected Payload:</strong><br>" +
-                payload.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-            console.log("[HONEYPOT] XSS payload received:", payload);
-
-            // === Create sandbox iframe ===
-            const frame = document.createElement("iframe");
-            frame.setAttribute("sandbox", "allow-scripts");
-            frame.style.width = "1px";
-            frame.style.height = "1px";
-            frame.style.border = "0";
-            document.body.appendChild(frame);
-
-            const doc = frame.contentDocument;
-
-            doc.open();
-            doc.write(`
-                <html><body>
-
-                <script>
-                try {
-                    // Fake wallet hijack—safe & controlled
-                    parent.document.getElementById("wallet").innerText =
-                        "ATTACKER_WALLET_" + Date.now();
-                } catch (e) {}
-
-                // Send payload to FLaK
-                fetch("https://YOUR-FLAK-SERVER/log", {
-                    method:"POST",
-                    headers:{"Content-Type":"application/json"},
-                    body: JSON.stringify({
-                        event:"xss_attempt",
-                        payload:${JSON.stringify(payload)},
-                        url: parent.location.href,
-                        time: new Date().toISOString()
-                    })
-                });
-                <\/script>
-
-                <script>
-                // Execute payload safely INSIDE sandbox
-                try { 
-                    ${payload} 
-                } catch (e) {}
-                <\/script>
-
-                </body></html>
-            `);
-
-            doc.close();
+        // -----------------------------
+        //   HONEYPOT SERVER LOGGING
+        // -----------------------------
+        function logToServer(eventType, data) {
+            fetch("https://YOUR_NGROK_URL_HERE/log", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    event: eventType,
+                    data: data,
+                    timestamp: new Date().toISOString(),
+                    user_agent: navigator.userAgent,
+                })
+            }).catch(err => console.error("Honeypot log failed:", err));
         }
+
+        // This function is intentionally simple:
+        // It allows any JavaScript to overwrite the wallet text.
+        // This is SAFE because GitHub Pages will not execute attacker code
+        // unless *you intentionally enter it into the page* for your demo.
+        window.overwriteWallet = function(newWallet) {
+            const wallet = document.getElementById("wallet");
+            wallet.innerText = newWallet;
+
+            // Log that the attacker overwrote the wallet
+            logToServer("wallet_overwrite", { new_wallet: newWallet });
+        };
     </script>
 </body>
 </html>
