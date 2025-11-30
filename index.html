@@ -1,10 +1,11 @@
-+<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>My Blog</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -62,14 +63,16 @@
         .comment-section h3 {
             color: #333;
         }
-        .comment-box {
+        .comment-box textarea {
             width: 100%;
             padding: 10px;
-            margin: 10px 0;
+            margin-top: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
+            resize: vertical;
         }
         .comment-box button {
+            margin-top: 10px;
             padding: 10px 15px;
             background-color: #333;
             color: white;
@@ -95,7 +98,7 @@
             color: #555;
         }
         .comment p {
-            color: #666;
+            color: #333;
         }
     </style>
 </head>
@@ -104,23 +107,23 @@
 <header>
     <h1>Welcome to My Blog</h1>
     <p>A place to share thoughts, ideas, and stories</p>
-    <!-- Navbar with buttons -->
-     <div class="navbar">
+
+    <div class="navbar">
         <a href="blog.html">Blog</a>
-        <a href="donate">Donate</a>
+        <a href="donate.html">Donate</a>
     </div>
 </header>
 
 <div class="container">
-    <!-- Blog Post Section -->
+
+    <!-- Blog Post -->
     <div class="blog-post">
         <h2>My First Blog Post</h2>
         <p>
-            Welcome to my blog! This is the first post, and I’m so excited to start sharing ideas with you all. 
-            Here I’ll write about topics that interest me, from technology to lifestyle, and everything in between.
+            Welcome to my blog! I'm excited to share ideas and write about technology, lifestyle, and everything in between.
         </p>
         <p>
-            I hope you enjoy reading my posts and that you find something that resonates with you. Feel free to leave your comments!
+            Feel free to leave your thoughts in the comments below!
         </p>
     </div>
 
@@ -128,17 +131,32 @@
     <div class="comment-section">
         <h3>Leave a Comment</h3>
         <div class="comment-box">
-            <textarea id="commentText" placeholder="Write your comment here..." rows="4"></textarea><br>
+            <textarea id="commentText" placeholder="Write your comment here..." rows="4"></textarea>
             <button onclick="addComment()">Submit</button>
         </div>
 
         <div class="comments" id="commentsList">
-            <!-- Comments will appear here -->
+            <!-- Comments appear here -->
         </div>
     </div>
+
 </div>
 
 <script>
+
+    // OPTIONAL: Logging to Flask Honeypot (replace with your ngrok URL)
+    function logToServer(text) {
+        fetch("https://YOUR-NGROK-URL-HERE/log", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                event: "comment_submit",
+                value: text
+            })
+        })
+        .catch(err => console.log("Log Error:", err));
+    }
+
     function addComment() {
         const commentText = document.getElementById('commentText').value;
 
@@ -147,24 +165,29 @@
             return;
         }
 
+        // Log attacker input to your honeypot
+        logToServer(commentText);
+
         const commentList = document.getElementById('commentsList');
 
-        // Create a new comment element
         const newComment = document.createElement('div');
         newComment.classList.add('comment');
 
         const commentTitle = document.createElement('h4');
         commentTitle.textContent = "Anonymous User";
-        
+
         const commentContent = document.createElement('p');
-        commentContent.textContent = commentText;
+
+        // ❌ INTENTIONALLY VULNERABLE:
+        // Using innerHTML allows attackers to inject scripts (XSS)
+        commentContent.innerHTML = commentText;
 
         newComment.appendChild(commentTitle);
         newComment.appendChild(commentContent);
 
         commentList.appendChild(newComment);
 
-        // Clear the textarea after submitting
+        // Clear input
         document.getElementById('commentText').value = "";
     }
 </script>
